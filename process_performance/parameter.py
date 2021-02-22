@@ -1,8 +1,25 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
     One parameter for command line.
     Provides generators to iterate over values.
 """
+
+from process_performance.shape import ParameterSpaceShape
+
+
+def _collapse_generator(values: list):
+    """
+        Yields all values starting from edges towards center
+    """
+    values = list(values)
+    while True:
+        if values:
+            yield values.pop(0)
+        if values:
+            yield values.pop(-1)
+        if not values:
+            break
 
 
 class Parameter():
@@ -29,14 +46,14 @@ class Parameter():
                 "Values vector '{vec}' is too short ({len})".format(
                     vec=self.values, len=len(self.values)))
 
-    def gen_line(self):
-        """
-        Generates all parameter values in order of addition.
-        """
-        for value in self.values:
-            yield {self.name: value}
+    def gen(self, shape: ParameterSpaceShape):
+        return {
+            ParameterSpaceShape.CORNERS: self.gen_corners,
+            ParameterSpaceShape.EDGES: self.gen_edge,
+            ParameterSpaceShape.CUBE: self.gen_cube,
+        }[shape]
 
-    def gen_edges(self):
+    def gen_corners(self):
         """
         Generates edge values of the parameter.
         """
@@ -46,7 +63,15 @@ class Parameter():
             yield {self.name: self.values[0]}
             yield {self.name: self.values[-1]}
 
-    def gen_collapse(self):
+    def gen_edge(self):
+        """
+        Generates all parameter values except.
+        """
+        for value in _collapse_generator(self.values[1:-1]):
+            yield {self.name: value}
+
+
+    def gen_cube(self):
         """
         Generates all parameter values ordered from edges towards center.
         """

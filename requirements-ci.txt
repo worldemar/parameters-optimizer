@@ -1,0 +1,7 @@
+# these are not required to run the program
+# but required to run the tests and ci checks
+pytest==7.3.1
+pytest-cov==4.0.0
+pytest-mock==3.10.0
+codecov==2.1.13
+prospector==1.9.0

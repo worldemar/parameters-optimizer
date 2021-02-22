@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
     Tests for Parameters class
 """
@@ -6,7 +7,7 @@
 import pytest
 from process_performance.parameters import Parameters
 
-test_data = [
+test_generators_data = [
     (
         {
             "p1": [1, 2, 3],
