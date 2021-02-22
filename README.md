@@ -28,10 +28,13 @@ There are situations when optimal parameters of certain process is unclear. Nota
 
   Since there are many options for optimizing C/C++ code, it may be time consuming to find optimal ones for your specific code. As an example, try to answer "When `-O3` is better than `-Os`?".
 
-## How it works
-
-(write this once refactor is complete)
-
 ## Usage example
 
-(example usage here)
+See [example_xz.py](example_xz.py) for concrete working code.
+
+To use it:
+- **Implement InvokeContextInterface interface in a custom class**. That will allow you to define starting conditions for an executable, collect data and format parameters for it.
+- **Instantiate Parameters class**. That will alow you to define possible parameter values for your executable.
+- **call `run`**. That will run executable and collect data, calling methods in your custom class. You can specify different methods of iterating over parameter space: checking corner cases, checking edges or entire space. `run` returns list of data points for you to analyze. Those can be easily saved to csv for exporting to other software or analyzed directly with matplotlib.
+
+
