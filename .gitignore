@@ -126,3 +126,7 @@ dmypy.json
 
 # Executables
 *.exe
+
+.vscode
+
+*.csv
