@@ -32,11 +32,17 @@ class InvokeContextProcessTimes(InvokeContextInterface):
 
 
 def test_spawn_cpu_times():
-    _t = 3
+    _t = 1
     _times = '__import__(\'os\').times()'
+    _time = '__import__(\'time\').time()'
+    _psutil_ctime = '__import__(\'psutil\').Process().create_time()'
     _args = {
         'cpu loader':
-        f"while ({_times}.system + {_times}.user) < {_t} and __import__('time').time() < 1684599898: pass;print({_times})"
+            "while " +
+            f"min({_times}.system, {_times}.user) <= {_t*2} " +
+            " and " +
+            f"{_time} - {_psutil_ctime} <= {_t*20}" +
+            ": print(__import__('os').times())"
     }
     context = InvokeContextProcessTimes()
     result = _spawn_process(context, _args)
