@@ -49,7 +49,7 @@ def _spawn_process(context: InvokeContextInterface, params: dict):
                 cpu_times = process.cpu_times()
             except psutil.NoSuchProcess:
                 continue
-            time.sleep(0.001)
+            time.sleep(0.1)
 
         stdout_thread.join()
         stderr_thread.join()
