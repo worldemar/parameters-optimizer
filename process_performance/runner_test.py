@@ -30,7 +30,7 @@ class InvokeContextProcessTimes(InvokeContextInterface):
                 os.path.join(sys.base_prefix, python),
                 '-c', load_cpu]
         else:
-            return [ os.path.join(sys.base_prefix, 'python'), '--version' ]
+            return [ 'ls', '-la', os.path.join(sys.base_prefix, 'python') ] # , '--version' ]
 
     def data(self) -> dict:
         return {}
