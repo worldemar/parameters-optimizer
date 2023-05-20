@@ -30,7 +30,7 @@ def _spawn_process(context: InvokeContextInterface, params: dict):
         process = psutil.Popen(
             args=context.argv(args=params),
             cwd=tmpdir,
-            bufsize=0,
+            bufsize=-1,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
@@ -49,6 +49,9 @@ def _spawn_process(context: InvokeContextInterface, params: dict):
                 cpu_times = process.cpu_times()
             except psutil.NoSuchProcess:
                 continue
+            # poll() required on linux, otherwise
+            # is_running() will always return True
+            process.poll()
             time.sleep(0.1)
 
         process.wait()

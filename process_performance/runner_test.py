@@ -37,7 +37,6 @@ class InvokeContextProcessTimes(InvokeContextInterface):
 
 
 def test_spawn_cpu_times():
-    return
     _t = 1
     _times = '__import__(\'os\').times()'
     _time = '__import__(\'time\').time()'
@@ -97,7 +96,6 @@ class InvokeContextCallCount(InvokeContextInterface):
 
 
 def test_run_call_count():
-    return
     param_space = Parameters.from_dict({})
 
     data = run(
