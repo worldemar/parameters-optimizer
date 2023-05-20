@@ -26,9 +26,11 @@ class InvokeContextProcessTimes(InvokeContextInterface):
         python = 'python'
         if sys.platform == 'win32':
             python = 'python.exe'
-        return [
-            os.path.join(sys.base_prefix, python),
-            '-c', load_cpu]
+            return [
+                os.path.join(sys.base_prefix, python),
+                '-c', load_cpu]
+        else:
+            return [ os.path.join(sys.base_prefix, 'python'), '--version' ]
 
     def data(self) -> dict:
         return {}
