@@ -26,7 +26,7 @@ jobs:
         pip install -r requirements.txt
     - name: Lint with prospector
       run: |
-        prospector --profile=prospector.yml
+        prospector --profile=prospector.yaml
     - name: Test with pytest
       run: |
         pytest -vv --cov-config=.coveragerc --cov=./ --cov-report=xml
