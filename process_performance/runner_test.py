@@ -32,16 +32,17 @@ class InvokeContextProcessTimes(InvokeContextInterface):
 
 
 def test_spawn_cpu_times():
-    _times = '__import__("os").times()'
+    _t = 3
+    _times = '__import__(\'os\').times()'
     _args = {
-        'cpu loader': f"while min({_times}.system, {_times}.user) < 1: pass"
+        'cpu loader': f"while min({_times}.system, {_times}.user) < {_t}: pass"
     }
     context = InvokeContextProcessTimes()
     result = _spawn_process(context, _args)
     assert result.exit_code == 0
     assert result.stderr == b''
-    assert result.time_system >= 1
-    assert result.time_user >= 1
+    assert result.time_system >= _t
+    assert result.time_user >= _t
 
 
 class InvokeContextCallCount(InvokeContextInterface):
