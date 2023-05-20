@@ -30,7 +30,7 @@ def _spawn_process(context: InvokeContextInterface, params: dict):
         process = psutil.Popen(
             args=context.argv(args=params),
             cwd=tmpdir,
-            bufsize=-1,
+            bufsize=0,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
