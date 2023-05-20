@@ -18,7 +18,7 @@ class InvokeContextDataCollector(InvokeContextInterface):
     exception = None
 
     def pre(self, workdir) -> None:
-        for i in range(10):
+        for i in range(100):
             filename = os.path.join(workdir, f'{i}-' + 'test_file_' * 10)
             with open(filename, 'wb') as file:
                 file.write(b'123')
@@ -37,8 +37,8 @@ class InvokeContextDataCollector(InvokeContextInterface):
     def argv(self, args) -> list:
         self.calls_argv += 1
         if sys.platform == 'win32':
-            return ['cmd.exe', '/c', '&&'.join(['dir'] * 100)]
-        return ['bash', '-c', '&&'.join(['ls'] * 1000)]
+            return ['cmd.exe', '/c', '&&'.join(['dir'] * 10)]
+        return ['bash', '-c', '&&'.join(['ls'] * 10)]
 
     def data(self) -> dict:
         self.calls_data += 1
