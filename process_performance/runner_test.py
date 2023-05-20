@@ -23,7 +23,7 @@ class InvokeContextProcessTimes(InvokeContextInterface):
 
     def argv(self, args) -> list:
         load_cpu = args['cpu loader']
-        python = 'python3'
+        python = 'python'
         if sys.platform == 'win32':
             python = 'python.exe'
         return [
