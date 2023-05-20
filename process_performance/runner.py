@@ -20,10 +20,13 @@ def _spawn_process(context: InvokeContextInterface, params: dict):
         buffer.append(descriptor.read())
 
     with tempfile.TemporaryDirectory() as tmpdir:
+        # lists for mutability
         stdout = []
         stderr = []
         cpu_times = None
+
         context.pre(workdir=tmpdir)
+
         process = psutil.Popen(
             args=context.argv(args=params),
             cwd=tmpdir,
@@ -31,6 +34,7 @@ def _spawn_process(context: InvokeContextInterface, params: dict):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
+
         stdout_thread = threading.Thread(
             target=stream_data_to_buffer,
             args=(process.stdout, stdout))
@@ -39,16 +43,18 @@ def _spawn_process(context: InvokeContextInterface, params: dict):
             args=(process.stderr, stderr))
         stdout_thread.start()
         stderr_thread.start()
+
         while process.is_running():
             try:
                 cpu_times = process.cpu_times()
             except psutil.NoSuchProcess:
                 continue
-            process.poll()
             time.sleep(0.001)
+
         stdout_thread.join()
         stderr_thread.join()
         process.wait()
+
         context.post()
 
         return InvokeResult(
