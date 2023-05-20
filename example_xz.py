@@ -6,7 +6,6 @@
 
 import os
 import csv
-import random
 import matplotlib.pyplot as plt
 
 from process_performance.parameters import Parameters
@@ -40,9 +39,10 @@ class InvokeContext(InvokeContextInterface):
         with open(filepath, 'wb') as example_file:
             with open(__file__, 'rb') as _self_file:
                 _self_file_data = _self_file.read()
-                for i in range(10):
+                for _ in range(10):
                     for chunk_length in range(len(_self_file_data)):
-                        example_file.write(_self_file_data[-chunk_length:chunk_length])
+                        example_file.write(
+                            _self_file_data[-chunk_length:chunk_length])
 
         self.workdir = workdir
         self.file_path = os.path.abspath(filepath)
