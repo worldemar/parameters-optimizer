@@ -22,20 +22,26 @@ class InvokeContextProcessTimes(InvokeContextInterface):
         pass
 
     def argv(self, args) -> list:
-        load_cpu = 'print(sum(i for i in range(8**9)))'
-        return [os.path.join(sys.base_prefix, 'python.exe'), '-c', load_cpu]
+        load_cpu = args['cpu loader']
+        return [
+            os.path.join(sys.base_prefix, 'python.exe'),
+            '-c', load_cpu]
 
     def data(self) -> dict:
         return {}
 
 
 def test_spawn_cpu_times():
+    _times = '__import__("os").times()'
+    _args = {
+        'cpu loader': f"while min({_times}.system, {_times}.user) < 1: pass"
+    }
     context = InvokeContextProcessTimes()
-    result = _spawn_process(context, {})
+    result = _spawn_process(context, _args)
     assert result.exit_code == 0
-    assert int(result.stdout) == 9007199187632128
     assert result.stderr == b''
-    assert result.time_system + result.time_user > 0
+    assert result.time_system >= 1
+    assert result.time_user >= 1
 
 
 class InvokeContextCallCount(InvokeContextInterface):
