@@ -1,0 +1,3 @@
+autodetect: false
+strictness: veryhigh
+test-warnings: true

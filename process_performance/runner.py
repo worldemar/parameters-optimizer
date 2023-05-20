@@ -6,6 +6,9 @@ import multiprocessing.managers
 import signal
 import subprocess
 import tempfile
+import threading
+import time
+import psutil
 
 from process_performance.context import InvokeContextInterface, InvokeResult
 from process_performance.parameters import Parameters
@@ -13,20 +16,47 @@ from process_performance.shape import ParameterSpaceShape
 
 
 def _spawn_process(context: InvokeContextInterface, params: dict):
+    def stream_data_to_buffer(descriptor, buffer):
+        buffer.append(descriptor.read())
+
     with tempfile.TemporaryDirectory() as tmpdir:
-        context.pre(tmpdir)
-        result = subprocess.run(
-            check=False,  # error must be handled in InvokeContextInterface
+        stdout = []
+        stderr = []
+        cpu_times = None
+        context.pre(workdir=tmpdir)
+        process = psutil.Popen(
             args=context.argv(args=params),
             cwd=tmpdir,
+            bufsize=-1,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
+        stdout_thread = threading.Thread(
+            target=stream_data_to_buffer,
+            args=(process.stdout, stdout))
+        stderr_thread = threading.Thread(
+            target=stream_data_to_buffer,
+            args=(process.stderr, stderr))
+        stdout_thread.start()
+        stderr_thread.start()
+        while process.is_running():
+            try:
+                cpu_times = process.cpu_times()
+            except psutil.NoSuchProcess:
+                continue
+            process.poll()
+            time.sleep(0.001)
+        stdout_thread.join()
+        stderr_thread.join()
+        process.wait()
         context.post()
+
         return InvokeResult(
-            returncode=result.returncode,
-            stdout=result.stdout.decode(),
-            stderr=result.stderr.decode()
+            exit_code=process.returncode,
+            stdout=stdout[0],
+            stderr=stderr[0],
+            time_system=cpu_times.system,
+            time_user=cpu_times.user
         )
 
 
