@@ -19,7 +19,6 @@ class InvokeContext(InvokeContextInterface):
         A class responsible for preparing, formatting command,
         cleaning up and data collection for subprocess.
     '''
-    workdir: str
     file_path: str
     file_size_raw: int
     file_size_compressed: int
@@ -44,7 +43,6 @@ class InvokeContext(InvokeContextInterface):
                         example_file.write(
                             _self_file_data[-chunk_length:chunk_length])
 
-        self.workdir = workdir
         self.file_path = os.path.abspath(filepath)
         self.file_size_raw = os.stat(self.file_path).st_size
 

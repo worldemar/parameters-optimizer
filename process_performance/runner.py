@@ -52,7 +52,7 @@ def _spawn_process(context: InvokeContextInterface, params: dict):
             # poll() required on linux, otherwise
             # is_running() will always return True
             process.poll()
-            time.sleep(0.1)
+            time.sleep(0.001)
 
         process.wait()
         stdout_thread.join()
