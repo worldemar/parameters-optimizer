@@ -51,9 +51,9 @@ def _spawn_process(context: InvokeContextInterface, params: dict):
                 continue
             time.sleep(0.1)
 
+        process.wait()
         stdout_thread.join()
         stderr_thread.join()
-        process.wait()
 
         context.post()
 
