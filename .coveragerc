@@ -1,5 +1,6 @@
 [run]
 # this concurrency setting does not seem to help with runner.py coverage
+# disable_warnings=include-ignored
 concurrency = multiprocessing
-include = process_performance/*
+# include = process_performance/*
 omit = example_xz.py
