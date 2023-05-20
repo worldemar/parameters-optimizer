@@ -180,7 +180,6 @@ class InvokeContextError(InvokeContextInterface):
 
 
 def test_run_exception():
-    return
     param_space = Parameters.from_dict({})
 
     data = run(
