@@ -32,7 +32,7 @@ class InvokeContextProcessTimes(InvokeContextInterface):
 
 
 def test_spawn_cpu_times():
-    _t = 3
+    _t = 1
     _times = '__import__(\'os\').times()'
     _args = {
         'cpu loader': f"while min({_times}.system, {_times}.user) < {_t}: pass"
