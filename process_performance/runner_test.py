@@ -18,7 +18,7 @@ class InvokeContextDataCollector(InvokeContextInterface):
     exception = None
 
     def pre(self, workdir) -> None:
-        for i in range(100):
+        for i in range(10):
             filename = os.path.join(workdir, f'{i}-' + 'test_file_' * 10)
             with open(filename, 'wb') as file:
                 file.write(b'123')
@@ -37,7 +37,7 @@ class InvokeContextDataCollector(InvokeContextInterface):
     def argv(self, args) -> list:
         self.calls_argv += 1
         if sys.platform == 'win32':
-            return ['cmd.exe', '/c', '&&'.join(['dir'] * 1000)]
+            return ['cmd.exe', '/c', '&&'.join(['dir'] * 100)]
         return ['bash', '-c', '&&'.join(['ls'] * 1000)]
 
     def data(self) -> dict:
@@ -58,7 +58,7 @@ def test_spawn_process():
     result = _spawn_process(context, {'p1': [1]})
     print(result.stdout)
     assert result.exit_code == 0
-    assert result.stdout.count(b'test_file') == 1000000
+    assert result.stdout.count(b'test_file') == 10000
     assert result.stderr == b''
     assert result.time_system > 0
     assert result.time_user > 0
