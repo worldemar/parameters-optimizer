@@ -36,7 +36,7 @@ def test_spawn_cpu_times():
     _times = '__import__(\'os\').times()'
     _args = {
         'cpu loader':
-        f"while ({_times}.system + {_times}.user) < {_t}: pass;print({_times})"
+        f"while ({_times}.system + {_times}.user) < {_t} and __import__('time').time() < 1684599898: pass;print({_times})"
     }
     context = InvokeContextProcessTimes()
     result = _spawn_process(context, _args)
