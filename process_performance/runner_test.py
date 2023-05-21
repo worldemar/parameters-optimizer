@@ -22,8 +22,18 @@ class InvokeContextProcessTimes(InvokeContextInterface):
         pass
 
     def argv(self, args) -> list:
-        return [os.path.join(sys.base_prefix, 'python'),
-                '-c', args['cpu loader']]
+        platforms = {
+            'win32': [os.path.join(sys.base_prefix, 'python'),
+                      '-c', args['cpu loader']],
+            'linux': [os.path.join(sys.base_prefix, 'python'),
+                      '-c', args['cpu loader']],
+            'darwin': [os.path.join(sys.base_prefix, 'bin/python'),
+                       '-c', args['cpu loader']],
+        }
+        if sys.platform in platforms.keys():
+            return platforms[sys.platform]
+        else:
+            raise RuntimeError(f'platform not supported: "{sys.platform}"')
 
     def data(self) -> dict:
         return {}
