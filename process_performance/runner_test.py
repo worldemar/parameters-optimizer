@@ -131,9 +131,14 @@ class InvokeContextStdout(InvokeContextInterface):
         pass
 
     def argv(self, args) -> list:
-        if sys.platform == 'win32':
-            return ['cmd.exe', '/c', 'echo Hello World']
-        return ['bash', '-c', 'echo Hello World']
+        platforms = {
+            'win32': ['cmd.exe', '/c', 'echo'],
+            'linux': ['sh', '-c', 'echo'],
+            'darwin': ['sh', '-c', 'echo'],
+        }
+        if sys.platform in platforms:
+            return platforms[sys.platform]
+        raise RuntimeError(f'platform not supported: "{sys.platform}"')
 
     def data(self) -> dict:
         return {
