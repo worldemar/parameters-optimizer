@@ -29,7 +29,7 @@ jobs:
         prospector --profile=prospector.yaml
     - name: Test with pytest
       run: |
-        pytest -vv --cov-config=.coveragerc --cov=./ --cov-report=xml
+        pytest -vv --full-trace --cov-config=.coveragerc --cov=./ --cov-report=xml
     - name: Report code coverage
       run: |
         codecov

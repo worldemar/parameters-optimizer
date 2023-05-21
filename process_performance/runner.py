@@ -44,13 +44,14 @@ def _spawn_process(context: InvokeContextInterface, params: dict):
         stdout_thread.start()
         stderr_thread.start()
 
-        while process.is_running():
+        while True:
             try:
                 cpu_times = process.cpu_times()
             except psutil.NoSuchProcess:
-                continue
+                break
             # poll() required on linux, otherwise
             # is_running() will always return True
+            # and NoSuchProcess is never thrown
             process.poll()
             time.sleep(0.001)
 
