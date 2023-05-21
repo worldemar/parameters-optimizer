@@ -11,7 +11,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest] # [ubuntu-latest, windows-latest, macos-latest]
+        # os: [macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         python_version: [3.11]
     steps:
     - uses: actions/checkout@v2
@@ -29,10 +30,7 @@ jobs:
         prospector --profile=prospector.yaml
     - name: Test with pytest
       run: |
-        ls -la /Library/Frameworks/Python.framework/Versions/3.11/python
-        file /Library/Frameworks/Python.framework/Versions/3.11/python
-        ls -la /Library/Frameworks/Python.framework/Versions/3.11/
-    #     pytest -vv --full-trace --cov-config=.coveragerc --cov=./ --cov-report=xml
-    # - name: Report code coverage
-    #   run: |
-    #     codecov
+        pytest -vv --full-trace --cov-config=.coveragerc --cov=./ --cov-report=xml
+    - name: Report code coverage
+      run: |
+        codecov
