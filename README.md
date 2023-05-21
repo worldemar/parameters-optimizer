@@ -30,7 +30,7 @@ There are situations when optimal parameters of certain process is unclear. Nota
 
 ## Usage example
 
-See [example_xz.py](example_xz.py) for concrete working code.
+See [example_xz.py](example_xz.py), demonstrating implementation for xz compression.
 
 To use it:
 - **Implement InvokeContextInterface interface in a custom class**. That will allow you to define starting conditions for an executable, collect data and format parameters for it.

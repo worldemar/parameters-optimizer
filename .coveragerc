@@ -1,5 +1,4 @@
 [run]
 # this concurrency setting does not seem to help with runner.py coverage
 concurrency = multiprocessing
-include = process_performance/*
 omit = example_xz.py

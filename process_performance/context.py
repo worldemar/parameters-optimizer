@@ -7,9 +7,11 @@ from dataclasses import dataclass
 
 @dataclass
 class InvokeResult:
-    returncode: int
+    exit_code: int
     stdout: str
     stderr: str
+    time_system: float
+    time_user: float
 
 
 class InvokeContextInterface(ABC):
