@@ -83,7 +83,7 @@ class InvokeContextCallCount(InvokeContextInterface):
         self.calls_argv += 1
         if sys.platform == 'win32':
             return ['cmd.exe', '/c', 'echo']
-        return ['bash', '-c', 'echo']
+        return ['sh', '-c', 'echo']
 
     def data(self) -> dict:
         self.calls_data += 1
@@ -132,9 +132,9 @@ class InvokeContextStdout(InvokeContextInterface):
 
     def argv(self, args) -> list:
         platforms = {
-            'win32': ['cmd.exe', '/c', 'echo'],
-            'linux': ['sh', '-c', 'echo'],
-            'darwin': ['sh', '-c', 'echo'],
+            'win32': ['cmd.exe', '/c', 'echo', 'Hello World'],
+            'linux': ['sh', '-c', 'echo', 'Hello World'],
+            'darwin': ['sh', '-c', 'echo', 'Hello World'],
         }
         if sys.platform in platforms:
             return platforms[sys.platform]
