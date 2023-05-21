@@ -132,9 +132,9 @@ class InvokeContextStdout(InvokeContextInterface):
 
     def argv(self, args) -> list:
         platforms = {
-            'win32': ['cmd.exe', '/c', 'echo', 'Hello World'],
-            'linux': ['sh', '-c', 'echo', 'Hello World'],
-            'darwin': ['sh', '-c', 'echo', 'Hello World'],
+            'win32': ['cmd.exe', '/c', 'echo Hello World'],
+            'linux': ['sh', '-c', 'echo Hello World'],
+            'darwin': ['sh', '-c', 'echo Hello World'],
         }
         if sys.platform in platforms:
             return platforms[sys.platform]
