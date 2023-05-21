@@ -30,10 +30,9 @@ class InvokeContextProcessTimes(InvokeContextInterface):
             'darwin': [os.path.join(sys.base_prefix, 'bin/python'),
                        '-c', args['cpu loader']],
         }
-        if sys.platform in platforms.keys():
+        if sys.platform in platforms:
             return platforms[sys.platform]
-        else:
-            raise RuntimeError(f'platform not supported: "{sys.platform}"')
+        raise RuntimeError(f'platform not supported: "{sys.platform}"')
 
     def data(self) -> dict:
         return {}
