@@ -67,7 +67,6 @@ def test_spawn_cpu_times():
 
     context = InvokeContextProcessTimes()
     result = _spawn_process(context, _args)
-    output = result.stdout.decode()
 
     assert result.exit_code == 0
     assert result.stderr == b''
