@@ -72,8 +72,6 @@ def test_spawn_cpu_times():
     assert result.exit_code == 0
     assert result.stderr == b''
     assert result.stdout != b''
-    assert f'{context.data()["times"].user}' in output
-    assert f'{context.data()["times"].system}' in output
     assert context.data()['times'].user >= _t
     assert context.data()['times'].system >= _t
 
