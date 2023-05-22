@@ -10,8 +10,6 @@ class InvokeResult:
     exit_code: int
     stdout: str
     stderr: str
-    time_system: float
-    time_user: float
 
 
 class InvokeContextInterface(ABC):
@@ -50,8 +48,21 @@ class InvokeContextInterface(ABC):
     @abstractmethod
     def argv(self, args: dict[str:any]) -> list:
         '''
+            Called on process spawn.
             Receives dictionary of { parameter_name : parameter_value }
             must return list of command line args to run as subprocess
+        '''
+
+    @abstractmethod
+    def status(self, pid: int) -> None:
+        '''
+            Called repeatedly during process monitoring.
+            Receives process pid as a parameter.
+            Use this to gather process data, to monitor
+            its status and send signals if needed.
+
+            Note that his method might never be called
+            if process exits faster than monitoring starts.
         '''
 
     @abstractmethod

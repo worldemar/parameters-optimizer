@@ -23,7 +23,6 @@ def _spawn_process(context: InvokeContextInterface, params: dict):
         # lists for mutability
         stdout = []
         stderr = []
-        cpu_times = None
 
         context.pre(workdir=tmpdir)
 
@@ -44,12 +43,12 @@ def _spawn_process(context: InvokeContextInterface, params: dict):
         stdout_thread.start()
         stderr_thread.start()
 
-        while True:
+        while process.is_running():
             try:
-                cpu_times = process.cpu_times()
-            except psutil.NoSuchProcess:
-                break
-            # poll() required on linux, otherwise
+                context.status(process.pid)
+            except Exception as exc:  # pylint: disable=broad-exception-caught
+                print(f'InvokeContextInterface.status exception: {exc}')
+            # poll() required on linux/darwin, otherwise
             # is_running() will always return True
             # and NoSuchProcess is never thrown
             process.poll()
@@ -65,8 +64,6 @@ def _spawn_process(context: InvokeContextInterface, params: dict):
             exit_code=process.returncode,
             stdout=stdout[0],
             stderr=stderr[0],
-            time_system=cpu_times.system,
-            time_user=cpu_times.user
         )
 
 
