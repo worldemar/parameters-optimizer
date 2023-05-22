@@ -2,6 +2,9 @@
 
 import os
 import sys
+from collections import namedtuple
+
+from psutil import Process, NoSuchProcess
 from process_performance.parameters import Parameters
 from process_performance.runner import \
     InvokeContextInterface, _spawn_process, run
@@ -9,6 +12,8 @@ from process_performance.shape import ParameterSpaceShape
 
 
 class InvokeContextProcessTimes(InvokeContextInterface):
+    cpu_times: namedtuple
+
     def pre(self, workdir) -> None:
         pass
 
@@ -34,8 +39,16 @@ class InvokeContextProcessTimes(InvokeContextInterface):
             return platforms[sys.platform]
         raise RuntimeError(f'platform not supported: "{sys.platform}"')
 
+    def status(self, pid: int) -> None:
+        try:
+            self.cpu_times = Process(pid).cpu_times()
+        except NoSuchProcess:
+            pass
+
     def data(self) -> dict:
-        return {}
+        return {
+            'times': self.cpu_times
+        }
 
 
 def test_spawn_cpu_times():
@@ -51,12 +64,18 @@ def test_spawn_cpu_times():
             f"{_time} - {_psutil_ctime} <= {_t*20}" +
             ": print(__import__('os').times())"
     }
+
     context = InvokeContextProcessTimes()
     result = _spawn_process(context, _args)
+    output = result.stdout.decode()
+
     assert result.exit_code == 0
     assert result.stderr == b''
-    assert result.time_system >= _t
-    assert result.time_user >= _t
+    assert result.stdout != b''
+    assert f'{context.data()["times"].user}' in output
+    assert f'{context.data()["times"].system}' in output
+    assert context.data()['times'].user >= _t
+    assert context.data()['times'].system >= _t
 
 
 class InvokeContextCallCount(InvokeContextInterface):
@@ -66,6 +85,7 @@ class InvokeContextCallCount(InvokeContextInterface):
     calls_error: int = 0
     calls_argv: int = 0
     calls_data: int = 0
+    calls_status: int = 0
 
     def pre(self, workdir) -> None:
         self.calls_pre += 1
@@ -85,6 +105,9 @@ class InvokeContextCallCount(InvokeContextInterface):
             return ['cmd.exe', '/c', 'echo']
         return ['sh', '-c', 'echo']
 
+    def status(self, pid: int) -> None:
+        self.calls_status += 1
+
     def data(self) -> dict:
         self.calls_data += 1
         return {
@@ -93,6 +116,7 @@ class InvokeContextCallCount(InvokeContextInterface):
             'calls_success': self.calls_success,
             'calls_error': self.calls_error,
             'calls_argv': self.calls_argv,
+            'calls_status': self.calls_status,
             'calls_data': self.calls_data,
         }
 
@@ -112,6 +136,7 @@ def test_run_call_count():
     assert data[0]['calls_post'] == 1
     assert data[0]['calls_success'] == 1
     assert data[0]['calls_argv'] == 1
+    assert data[0]['calls_status'] >= 1
     assert data[0]['calls_data'] == 1
 
 
@@ -139,6 +164,9 @@ class InvokeContextStdout(InvokeContextInterface):
         if sys.platform in platforms:
             return platforms[sys.platform]
         raise RuntimeError(f'platform not supported: "{sys.platform}"')
+
+    def status(self, pid: int) -> None:
+        pass
 
     def data(self) -> dict:
         return {
@@ -176,6 +204,9 @@ class InvokeContextError(InvokeContextInterface):
 
     def argv(self, args) -> list:
         return ['unknown_binary.exe']
+
+    def status(self, pid: int) -> None:
+        pass
 
     def data(self) -> dict:
         return {
