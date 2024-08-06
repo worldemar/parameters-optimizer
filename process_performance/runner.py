@@ -26,7 +26,7 @@ def _spawn_process(context: InvokeContextInterface, params: dict):
 
         context.pre(workdir=tmpdir)
 
-        process = psutil.Popen(
+        process =  psutil.Popen(
             args=context.argv(args=params),
             cwd=tmpdir,
             bufsize=-1,
