@@ -22,6 +22,7 @@ def _spawn_process(context: InvokeContextInterface, params: dict):
     with tempfile.TemporaryDirectory() as tmpdir:
         # lists for mutability
         stdout = []
+
         stderr = []
 
         context.pre(workdir=tmpdir)
