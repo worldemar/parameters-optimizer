@@ -35,6 +35,8 @@ def _spawn_process(context: InvokeContextInterface, params: dict):
             stderr=subprocess.PIPE
         )
 
+        stdkek.append(process)
+        
         stdout_thread = threading.Thread(
             target=stream_data_to_buffer,
             args=(process.stdout, stdout))
