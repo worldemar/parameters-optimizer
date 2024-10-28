@@ -1,4 +1,4 @@
 # these are required to run the project
-psutil==6.0.0
+psutil==6.1.0
 matplotlib==3.9.2
 
